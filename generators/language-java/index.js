@@ -28,6 +28,7 @@ const javaUtils = require('../lib/javautils');
 
 const PATH_MAPPINGS_FILE = './src/main/resources/mappings.json';
 const PATH_LOCALDEV_FILE = './src/main/resources/localdev-config.json';
+const PATH_KNATIVE_YAML = "./.bluemix/service-knative.yaml";
 const TEMPLATE_EXT = '.template';
 const GENERATOR_LOCATION = 'server';
 

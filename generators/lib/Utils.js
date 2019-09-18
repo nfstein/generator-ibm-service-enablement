@@ -77,7 +77,7 @@ function addServicesEnvToHelmChartAsync(args) {
 }
 
 function addServicesToServiceKnativeYamlAsync(args) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		let serviceYamlFilePath = args.destinationPath
 		let services = args.context.deploymentServicesEnv; //array of service objects
 
@@ -88,8 +88,6 @@ function addServicesToServiceKnativeYamlAsync(args) {
 		}
 
 		let serviceYamlContents = yaml.safeLoad(fs.readFileSync(serviceYamlFilePath, 'utf8'));
-		console.log("serviceYamlContents:");
-		console.log(serviceYamlContents);
 
 		// overwrites env if it also exists, could check and append to env in future
 		serviceYamlContents.spec.template.spec.containers[0].env = services;
