@@ -18,6 +18,7 @@ const PATH_REQUIREMENTS_TXT = "./requirements.txt";
 const PATH_PIPFILE_JSON = "/Pipfile.json";
 const PATH_GIT_IGNORE = "./.gitignore";
 const PATH_PIPFILE = 'Pipfile';
+const PATH_KNATIVE_YAML = "./.bluemix/service-knative.yaml";
 const SERVICES_INIT_FILE = "__init__.py";
 const SOURCES = '[[source]]';
 const DEV_PACKAGES = '[dev-packages]';
@@ -303,6 +304,7 @@ module.exports = class extends Generator {
 			.then(() => Utils.addServicesToPipelineYamlAsync({context: this.context, destinationPath: this.destinationPath()}))
 			.then(() => Utils.addServicesEnvToValuesAsync({context: this.context, destinationPath: this.destinationPath()}))
 			.then(() => Utils.addServicesEnvToToolchainAsync({context: this.context, destinationPath: this.destinationPath()}))
-			.then(() => Utils.addServicesKeysToKubeDeployAsync({context: this.context, destinationPath: this.destinationPath()}));
+			.then(() => Utils.addServicesKeysToKubeDeployAsync({context: this.context, destinationPath: this.destinationPath()}))
+			.then(() => Utils.addServicesToServiceKnativeYamlAsync({context: this.context, destinationPath: this.destinationPath(PATH_KNATIVE_YAML)}));
 	}
 };

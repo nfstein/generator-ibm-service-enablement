@@ -13,6 +13,7 @@ const bluemixLabelMappings = require('./bluemix-label-mappings.json');
 const PATH_MAPPINGS_FILE = "./config/mappings.json";
 const PATH_LOCALDEV_CONFIG_FILE = "./config/localdev-config.json";
 const PATH_GIT_IGNORE = "./.gitignore";
+const PATH_KNATIVE_YAML = "./.bluemix/service-knative.yaml";
 const FILE_SEARCH_PATH_PREFIX = "file:/config/localdev-config.json:";
 
 module.exports = class extends Generator {
@@ -279,6 +280,7 @@ module.exports = class extends Generator {
 			.then(() => Utils.addServicesToPipelineYamlAsync({ context: this.context, destinationPath: this.destinationPath() }))
 			.then(() => Utils.addServicesEnvToValuesAsync({ context: this.context, destinationPath: this.destinationPath() }))
 			.then(() => Utils.addServicesEnvToToolchainAsync({context: this.context, destinationPath: this.destinationPath()}))
-			.then(() => Utils.addServicesKeysToKubeDeployAsync({ context: this.context, destinationPath: this.destinationPath() }));
+			.then(() => Utils.addServicesKeysToKubeDeployAsync({ context: this.context, destinationPath: this.destinationPath() }))
+			.then(() => Utils.addServicesToServiceKnativeYamlAsync({context: this.context, destinationPath: this.destinationPath(PATH_KNATIVE_YAML)}));
 	}
 };

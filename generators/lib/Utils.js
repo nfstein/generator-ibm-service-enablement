@@ -3,6 +3,7 @@ const Log4js = require('log4js');
 const logger = Log4js.getLogger("generator-ibm-service-enablement:Utils");
 const readline = require('readline');
 const fs = require('fs');
+const yaml = require('js-yaml');
 
 const SPRING_BOOT_SERVICE_NAME = "spring_boot_service_name";
 const SPRING_BOOT_SERVICE_KEY_SEPARATOR = "spring_boot_service_key_separator";
@@ -73,6 +74,34 @@ function addServicesEnvToHelmChartAsync(args) {
 			return resolve();
 		}
 	});
+}
+
+function addServicesToServiceKnativeYamlAsync(args) {
+	return new Promise((resolve, reject) => {
+		let serviceYamlFilePath = args.destinationPath
+		let services = args.context.deploymentServicesEnv; //array of service objects
+
+		let hasServices = services && services.length > 0;
+		if (!fs.existsSync(serviceYamlFilePath) || !hasServices) {
+			logger.info("Not adding service env to service-knative.yaml");
+			return resolve()
+		}
+
+		let serviceYamlContents = yaml.safeLoad(fs.readFileSync(serviceYamlFilePath, 'utf8'));
+		console.log("serviceYamlContents:");
+		console.log(serviceYamlContents);
+
+		// overwrites env if it also exists, could check and append to env in future
+		serviceYamlContents.spec.template.spec.containers[0].env = services;
+		yaml.safeDump(serviceYamlContents)
+		
+		logger.info("Adding service env to service-knative.yaml");
+
+		fs.writeFileSync(serviceYamlFilePath, yaml.safeDump(serviceYamlContents))
+
+		return resolve();
+	});
+	
 }
 
 function appendDeploymentYaml(deploymentFilePath, services, resolve, reject) {
@@ -272,6 +301,7 @@ function addServicesToPipelineYamlAsync(args) {
 	})
 }
 
+
 /**
  *  Some Spring dependencies need a specific service name and
  *  cred key names... 'cause Spring is extra special :-)
@@ -461,5 +491,6 @@ module.exports = {
 	addServicesToPipelineYamlAsync: addServicesToPipelineYamlAsync,
 	addServicesEnvToValuesAsync: addServicesEnvToValuesAsync,
 	addServicesEnvToToolchainAsync: addServicesEnvToToolchainAsync,
-	addServicesKeysToKubeDeployAsync: addServicesKeysToKubeDeployAsync
+	addServicesKeysToKubeDeployAsync: addServicesKeysToKubeDeployAsync,
+	addServicesToServiceKnativeYamlAsync: addServicesToServiceKnativeYamlAsync
 };

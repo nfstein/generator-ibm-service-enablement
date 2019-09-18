@@ -33,6 +33,7 @@
   "dependencies": {
     "handlebars": "^4.1.2",
     "jsdom": "^15.1.1",
+    "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "log4js": "^4.0.2",
     "prettify-xml": "^1.2.0",

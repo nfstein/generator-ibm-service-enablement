@@ -192,6 +192,7 @@ module.exports = class extends Generator {
 			.then(() => Utils.addServicesToPipelineYamlAsync({ context: this.context, destinationPath: this.destinationPath() }))
 			.then(() => Utils.addServicesEnvToValuesAsync({context: this.context, destinationPath: this.destinationPath()}))
 			.then(() => Utils.addServicesEnvToToolchainAsync({context: this.context, destinationPath: this.destinationPath()}))
-			.then(() => Utils.addServicesKeysToKubeDeployAsync({ context: this.context, destinationPath: this.destinationPath() }));
+			.then(() => Utils.addServicesKeysToKubeDeployAsync({ context: this.context, destinationPath: this.destinationPath() }))
+			.then(() => Utils.addServicesToServiceKnativeYamlAsync({context: this.context, destinationPath: this.destinationPath(PATH_KNATIVE_YAML)}));
 	}
 };
