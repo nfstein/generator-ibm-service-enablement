@@ -80,7 +80,6 @@ function addServicesToServiceKnativeYamlAsync(args) {
 	return new Promise((resolve) => {
 		let serviceYamlFilePath = args.destinationPath
 		let services = args.context.deploymentServicesEnv; //array of service objects
-
 		let hasServices = services && services.length > 0;
 		if (!fs.existsSync(serviceYamlFilePath) || !hasServices) {
 			logger.info("Not adding service env to service-knative.yaml");
@@ -89,8 +88,21 @@ function addServicesToServiceKnativeYamlAsync(args) {
 
 		let serviceYamlContents = yaml.safeLoad(fs.readFileSync(serviceYamlFilePath, 'utf8'));
 
+		let env_services = services.map((service) => {
+			return {
+				name: service.name,
+				valueFrom: {
+					secretKeyRef: {
+						name: service.valueFrom.secretKeyRef.key + "-" + service.keyName,
+						key: service.valueFrom.secretKeyRef.key
+					}
+				}
+			}
+		})
+
 		// overwrites env if it also exists, could check and append to env in future
-		serviceYamlContents.spec.template.spec.containers[0].env = services;
+		serviceYamlContents.spec.template.spec.containers[0].env = env_services
+
 		yaml.safeDump(serviceYamlContents)
 		
 		logger.info("Adding service env to service-knative.yaml");
